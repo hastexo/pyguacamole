@@ -26,7 +26,12 @@ BUFFER_LENGTH = 4096
 class GuacamoleClient(object):
     """Guacamole Client class."""
 
-    def __init__(self, host, port, timeout=20, debug=False, logger=None):
+    def __init__(self,
+                 host,
+                 port,
+                 timeout=20,
+                 loglevel=logging.INFO,
+                 logger=guac_logger):
         """
         Guacamole Client class. This class can handle communication with guacd
         server.
@@ -37,7 +42,9 @@ class GuacamoleClient(object):
 
         :param timeout: socket connection timeout.
 
-        :param debug: if True, default logger will switch to Debug level.
+        :param loglevel: logging level, defaults to Debug level.
+
+        :param logger: logger for GuacamoleCLient class.
         """
         self.host = host
         self.port = port
@@ -54,12 +61,7 @@ class GuacamoleClient(object):
         # Client ID
         self._id = None
 
-        self.logger = guac_logger
-        if logger:
-            self.logger = logger
-
-        if debug:
-            self.logger.setLevel(logging.DEBUG)
+        self.logger = logger
 
     @property
     def client(self):
