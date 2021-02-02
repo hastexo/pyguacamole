@@ -18,8 +18,9 @@ from guacamole.instruction import GuacamoleInstruction as Instruction
 # supported protocols
 PROTOCOLS = ('vnc', 'rdp', 'ssh')
 
+# maximum amount of data to be received from the socket at once, in bytes
+BUFFER_LENGTH = 4096
 
-BUF_LEN = 4096
 
 
 class GuacamoleClient(object):
@@ -104,7 +105,7 @@ class GuacamoleClient(object):
             else:
                 start = len(self._buffer)
                 # we are still waiting for instruction termination
-                buf = self.client.recv(BUF_LEN)
+                buf = self.client.recv(BUFFER_LENGTH)
                 if not buf:
                     # No data recieved, connection lost?!
                     self.close()
