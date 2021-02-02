@@ -66,6 +66,7 @@ class GuacamoleInstruction(object):
 
         :return: GuacamoleInstruction()
         """
+        instruction = instruction.decode()
         if not instruction.endswith(INST_TERM):
             raise InvalidInstruction('Instruction termination not found.')
 
