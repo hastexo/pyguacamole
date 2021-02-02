@@ -1,33 +1,11 @@
 """
-The MIT License (MIT)
-
-Copyright (c)   2014 rescale
-                2014 - 2015 Mohab Usama
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The underlying work for this code is published under the MIT License (MIT)
+(https://pypi.org/project/pyguacamole/)
 """
+
 import itertools
-import six
 
-from builtins import str as __unicode__
-
-from guacamole.exceptions import InvalidInstruction
+from .exceptions import InvalidInstruction
 
 
 INST_TERM = ';'  # instruction terminator character
@@ -35,20 +13,6 @@ ARG_SEP = ','  # instruction arg separator character
 ELEM_SEP = '.'  # instruction arg element separator character (e.g. 4.size)
 
 # @TODO: enumerate instruction set
-
-
-def utf8(unicode_str):
-    """
-    Return a utf-8 encoded string from a valid unicode string.
-
-    :param unicode_str: Unicode string.
-
-    :return: str
-    """
-    if six.PY2 and isinstance(unicode_str, __unicode__):
-        return unicode_str.encode('utf-8')
-
-    return unicode_str
 
 
 class GuacamoleInstruction(object):
@@ -91,9 +55,6 @@ class GuacamoleInstruction(object):
         """
         if not instruction.endswith(INST_TERM):
             raise InvalidInstruction('Instruction termination not found.')
-
-        # Use proper encoding
-        instruction = utf8(instruction)
 
         # Get arg size
         elems = instruction.split(ELEM_SEP, 1)
@@ -144,9 +105,8 @@ class GuacamoleInstruction(object):
 
         :return: str
         """
-        arg_utf8 = utf8(arg)
 
-        return ELEM_SEP.join([str(len(str(arg_utf8))), str(arg_utf8)])
+        return ELEM_SEP.join([str(len(str(arg))), str(arg)])
 
     def encode(self):
         """
@@ -159,6 +119,3 @@ class GuacamoleInstruction(object):
         elems = ARG_SEP.join(self.encode_arg(arg) for arg in instruction_iter)
 
         return elems + INST_TERM
-
-    def __str__(self):
-        return self.encode()

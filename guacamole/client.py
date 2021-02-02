@@ -1,19 +1,15 @@
 """
-The MIT License (MIT)
-
-Copyright (c)   2014 rescale
-                2014 - 2016 Mohab Usama
+The underlying work for this code is published under the MIT License (MIT)
+(https://pypi.org/project/pyguacamole/)
 """
 
 import socket
 import logging
 
-from guacamole import logger as guac_logger
+from .exceptions import GuacamoleError
 
-from guacamole.exceptions import GuacamoleError
-
-from guacamole.instruction import INST_TERM
-from guacamole.instruction import GuacamoleInstruction as Instruction
+from .instruction import INST_TERM
+from .instruction import GuacamoleInstruction as Instruction
 
 # supported protocols
 PROTOCOLS = ('vnc', 'rdp', 'ssh')
@@ -30,7 +26,7 @@ class GuacamoleClient(object):
                  host,
                  port,
                  timeout=20,
-                 loglevel=logging.INFO,
+                 loglevel=logging.DEBUG,
                  logger=guac_logger):
         """
         Guacamole Client class. This class can handle communication with guacd
@@ -109,7 +105,7 @@ class GuacamoleClient(object):
                 # we are still waiting for instruction termination
                 buf = self.client.recv(BUFFER_LENGTH)
                 if not buf:
-                    # No data recieved, connection lost?!
+                    # No data received, connection lost?!
                     self.close()
                     self.logger.warn(
                         'Failed to receive instruction. Closing.')
@@ -140,17 +136,16 @@ class GuacamoleClient(object):
         self.logger.debug('Sending instruction: %s' % str(instruction))
         return self.send(instruction.encode())
 
-    def handshake(self, protocol='vnc', width=1024, height=768, dpi=96,
+    def handshake(self, protocol='ssh', width=1024, height=768, dpi=96,
                   audio=None, video=None, image=None, **kwargs):
         """
         Establish connection with Guacamole guacd server via handshake.
-
         """
         if protocol not in PROTOCOLS and 'connectionid' not in kwargs:
             self.logger.error(
                 'Invalid protocol: %s and no connectionid provided' % protocol)
-            raise GuacamoleError('Cannot start Handshake. '
-                                 'Missing protocol or connectionid.')
+            raise GuacamoleError(
+                'Cannot start Handshake. Missing protocol or connectionid.')
 
         if audio is None:
             audio = list()

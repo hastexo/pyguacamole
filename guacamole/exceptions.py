@@ -1,7 +1,6 @@
 """
-The MIT License (MIT)
-
-Copyright (c) 2014 - 2016 Mohab Usama
+The underlying work for this code is published under the MIT License (MIT)
+(https://pypi.org/project/pyguacamole/)
 """
 
 
