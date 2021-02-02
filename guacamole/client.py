@@ -18,7 +18,6 @@ from guacamole.instruction import GuacamoleInstruction as Instruction
 # supported protocols
 PROTOCOLS = ('vnc', 'rdp', 'ssh')
 
-PROTOCOL_NAME = 'guacamole'
 
 BUF_LEN = 4096
 
